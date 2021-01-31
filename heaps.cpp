@@ -19,6 +19,10 @@ public:
     void printArray();
 
     [[nodiscard]] bool isEmpty() const;
+
+    void heapify(const int *b, int arraySize);
+
+    int *heapSort(int *b, int arraySize, const string &dir = "inc");
 };
 
 void Heap::insert(int value) {
@@ -39,7 +43,6 @@ void Heap::printArray() {
     cout << endl;
 }
 
-//
 int Heap::extractMax() {
     if (size > 0) {
         const int removedItem = a[0];
@@ -48,7 +51,8 @@ int Heap::extractMax() {
         int currentIndex = 0;
         int leftChildIndex = (2 * currentIndex) + 1;
         int rightChildIndex = (2 * currentIndex) + 2;
-        while ((leftChildIndex < size && a[leftChildIndex] > a[currentIndex]) || (rightChildIndex < size && a[rightChildIndex] > a[currentIndex]) ) {
+        while ((leftChildIndex < size && a[leftChildIndex] > a[currentIndex]) ||
+               (rightChildIndex < size && a[rightChildIndex] > a[currentIndex])) {
             if (a[leftChildIndex] > a[rightChildIndex]) {
                 swap(a[leftChildIndex], a[currentIndex]);
                 currentIndex = leftChildIndex;
@@ -69,19 +73,53 @@ bool Heap::isEmpty() const {
     return size != 0;
 }
 
+void Heap::heapify(const int *b, int arraySize) {
+    for (auto i = 0; i < arraySize; i++) {
+        a[i] = b[i];
+    }
+    size = arraySize;
+    for (int i = arraySize - 1; i >= 0; i--) {
+        int currentIndex = i;
+        int leftChildIndex = (2 * currentIndex) + 1;
+        int rightChildIndex = (2 * currentIndex) + 2;
+        while ((leftChildIndex < size && a[leftChildIndex] > a[currentIndex]) ||
+               (rightChildIndex < size && a[rightChildIndex] > a[currentIndex])) {
+            if (a[leftChildIndex] > a[rightChildIndex]) {
+                swap(a[leftChildIndex], a[currentIndex]);
+                currentIndex = leftChildIndex;
+                leftChildIndex = (2 * currentIndex) + 1;
+                rightChildIndex = (2 * currentIndex) + 2;
+            } else {
+                swap(a[rightChildIndex], a[currentIndex]);
+                currentIndex = rightChildIndex;
+                leftChildIndex = (2 * currentIndex) + 1;
+                rightChildIndex = (2 * currentIndex) + 2;
+            }
+        }
+    }
+}
+
+int *Heap::heapSort(int *b, int arraySize, const string &dir) {
+    heapify(b, arraySize);
+    if (dir == "dec")
+        for (int i = 0; i < arraySize; i++) {
+            b[i] = extractMax();
+        }
+    else
+        for (int i = 0; i < arraySize; i++) {
+            b[arraySize - i - 1] = extractMax();
+        }
+    return b;
+}
+
 int main() {
     Heap heap;
-    heap.insert(32);
-    heap.insert(12);
-    heap.insert(24);
-    heap.insert(19);
-    heap.insert(15);
-    heap.insert(40);
-    heap.insert(27);
-    heap.insert(39);
-    heap.insert(50);
-    while (heap.isEmpty()) {
-       cout << heap.extractMax() << ' ' ;
-    }
+    int a[] = {65, 23, 75, 45, 12, 49, 18, 29};
+    const int size = sizeof a / sizeof a[0];
+    heap.heapSort(a, size);
+    for (int i : a) cout << i << ' ';
+    cout << endl;
+    heap.heapSort(a, size, "dec");
+    for (int i : a) cout << i << ' ';
     cout << endl;
 }
