@@ -3,4 +3,4 @@ project(dsa)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(dsa heaps.cpp)
+add_executable(dsa tries.cpp)
