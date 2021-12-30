@@ -12,6 +12,10 @@ public:
     void printHeap();
 
     int popIterative();
+
+    void heapify(int index);
+
+    int pop();
 };
 
 void Heap::insert(int value) {
@@ -38,6 +42,37 @@ void Heap::printHeap() {
     for (int i = 0; i < size; i++) cout << heap[i] << " ,";
     cout << endl;
 }
+
+void Heap::heapify(int index) {
+    int leftChildIndex = index * 1 + 1;
+    int rightChildIndex = index * 1 + 2;
+    int maxChildIndex = index;
+
+    if (leftChildIndex < size && heap[leftChildIndex] > heap[maxChildIndex]) {
+        maxChildIndex = leftChildIndex;
+    }
+
+    if (rightChildIndex < size && heap[rightChildIndex] > heap[maxChildIndex]) {
+        maxChildIndex = rightChildIndex;
+    }
+
+    if (maxChildIndex != index) {
+        swap(heap[maxChildIndex], heap[index]);
+        heapify(maxChildIndex);
+    }
+}
+
+int Heap::pop() {
+    if (size > 0) {
+        int poppedElement = heap[0];
+        heap[0] = heap[size - 1];
+        size--;
+        heapify(0);
+        return poppedElement;
+    }
+    return -1;
+}
+
 
 int Heap::popIterative() {
     int poppedElement = heap[0];
@@ -71,20 +106,23 @@ int Heap::popIterative() {
     return poppedElement;
 }
 
+
 int main() {
     Heap heap;
+    heap.insert(2);
     heap.insert(5);
-    heap.insert(10);
+    heap.insert(9);
     heap.insert(7);
     heap.insert(3);
-    heap.insert(9);
-    heap.insert(2);
+    heap.insert(10);
     heap.printHeap();
-    cout << heap.popIterative() << endl;
-    cout << heap.popIterative() << endl;
-    cout << heap.popIterative() << endl;
-    cout << heap.popIterative() << endl;
-    cout << heap.popIterative() << endl;
-    cout << heap.popIterative() << endl;
+    cout << heap.pop() << endl;
+    cout << heap.pop() << endl;
+    cout << heap.pop() << endl;
+    cout << heap.pop() << endl;
+    cout << heap.pop() << endl;
+    cout << heap.pop() << endl;
+    cout << heap.pop() << endl;
+    cout << heap.pop() << endl;
     return 0;
 }
