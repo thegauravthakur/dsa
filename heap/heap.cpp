@@ -3,23 +3,26 @@
 using namespace std;
 
 class Heap {
-    vector<int> heap;
+    int heap[10000]{};
+    int size = 0;
 
 public:
     void insert(int);
 
     void printHeap();
+
+    int popIterative();
 };
 
 void Heap::insert(int value) {
     // a complete binary tree with one node is always a binary tree
-    if (heap.empty())
-        heap.push_back(value);
+    if (size == 0)
+        heap[size++] = value;
     else {
         // add element to the leaf
-        heap.push_back(value);
+        heap[size++] = value;
         // get the index of last item
-        unsigned long long index = heap.size() - 1;
+        int index = size - 1;
         // get the parent index
         int parent = (int) index / 2;
         // push the value upwards till it satisfies heap property
@@ -32,8 +35,40 @@ void Heap::insert(int value) {
 }
 
 void Heap::printHeap() {
-    for (auto item: heap) cout << item << " ,";
+    for (int i = 0; i < size; i++) cout << heap[i] << " ,";
     cout << endl;
+}
+
+int Heap::popIterative() {
+    int poppedElement = heap[0];
+    heap[0] = heap[size - 1];
+    int index = 0;
+    int leftChildIndex = index * 2 + 1;
+    int rightChildIndex = index * 2 + 2;
+    int maxChildIndex = index;
+
+    if (leftChildIndex < size && heap[leftChildIndex] > heap[maxChildIndex]) {
+        maxChildIndex = leftChildIndex;
+    }
+
+    if (rightChildIndex < size && heap[rightChildIndex] > heap[maxChildIndex]) {
+        maxChildIndex = rightChildIndex;
+    }
+
+    while (maxChildIndex != index) {
+        swap(heap[index], heap[maxChildIndex]);
+        index = maxChildIndex;
+        leftChildIndex = index * 2 + 1;
+        rightChildIndex = index * 2 + 2;
+        maxChildIndex = index;
+        if (leftChildIndex < size && heap[leftChildIndex] > heap[maxChildIndex]) {
+            maxChildIndex = leftChildIndex;
+        }
+        if (rightChildIndex < size && heap[rightChildIndex] > heap[maxChildIndex]) {
+            maxChildIndex = rightChildIndex;
+        }
+    }
+    return poppedElement;
 }
 
 int main() {
@@ -45,5 +80,11 @@ int main() {
     heap.insert(9);
     heap.insert(2);
     heap.printHeap();
+    cout << heap.popIterative() << endl;
+    cout << heap.popIterative() << endl;
+    cout << heap.popIterative() << endl;
+    cout << heap.popIterative() << endl;
+    cout << heap.popIterative() << endl;
+    cout << heap.popIterative() << endl;
     return 0;
 }
